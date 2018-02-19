@@ -1,0 +1,16 @@
+[Unit]
+Description=Confluent Kafka REST
+Documentation=https://docs.confluent.io/current/kafka-rest/docs/index.html
+Requires=network.target
+After=network.target
+ 
+[Service]
+Type=simple
+SuccessExitStatus=1
+ExecStart=/bin/kafka-rest-start /etc/kafka-rest/kafka-rest.properties
+ExecStop=/bin/kafka-rest-stop
+User=root
+Group=root
+ 
+[Install]
+WantedBy=default.target

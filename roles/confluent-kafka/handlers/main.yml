@@ -1,0 +1,29 @@
+---
+- name: yum-clean-all
+  command: yum clean all
+  args:
+    warn: no
+
+- name: restart zookeeper service
+  systemd: 
+    state: restarted 
+    name: zookeeper.service
+    daemon_reload: yes
+
+- name: restart kafka service
+  systemd: 
+    state: restarted 
+    name: kafka.service
+    daemon_reload: yes
+ 
+- name: restart schema-registry service
+  systemd: 
+    state: restarted 
+    name: schema-registry.service
+    daemon_reload: yes
+
+- name: restart kafka-rest service
+  systemd: 
+    state: restarted 
+    name: kafka-rest.service
+    daemon_reload: yes

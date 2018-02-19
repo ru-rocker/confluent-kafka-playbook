@@ -1,0 +1,16 @@
+---
+- name: set schema registry url
+  set_fact:
+    schema_registry_urls: "{{ schema_registry_urls + 'http://' + item + ':8081,'}}"
+  with_items: "{{ server_urls }}"
+
+- name: trim comma trailing schema registry urls
+  set_fact:
+    schema_registry: "{{ schema_registry_urls[:-1] }}"
+
+# set zookeeper cluster node
+- name: set zookeeper node 1
+  set_fact:
+    zookeeper_server_1: "{{ server_urls[0] + ':2888:3888' }}"
+    zookeeper_server_2: "{{ server_urls[1] + ':2888:3888' }}"
+    zookeeper_server_3: "{{ server_urls[2] + ':2888:3888' }}"

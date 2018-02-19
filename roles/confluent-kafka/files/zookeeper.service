@@ -1,0 +1,16 @@
+[Unit]
+Description=Apache Zookeeper
+Documentation=https://docs.confluent.io/current/quickstart.html
+Requires=network.target
+After=network.target
+ 
+[Service]
+Type=simple
+SuccessExitStatus=1
+ExecStart=/bin/zookeeper-server-start /etc/kafka/zookeeper.properties
+ExecStop=/bin/zookeeper-server-stop
+User=root
+Group=root
+ 
+[Install]
+WantedBy=default.target

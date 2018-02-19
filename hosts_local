@@ -1,0 +1,6 @@
+node-01 ansible_host=172.20.20.10 ansible_user=root
+node-02 ansible_host=172.20.20.20 ansible_user=root
+node-03 ansible_host=172.20.20.30 ansible_user=root
+
+[kafka_broker_nodes]
+node-[01:03]

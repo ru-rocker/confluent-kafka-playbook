@@ -1,0 +1,6 @@
+---
+server_urls: "{{ groups['kafka_broker_nodes'] | map('extract', hostvars, ['ansible_host']) | list }}"
+zookeeper_connect_servers: "{{ groups['kafka_broker_nodes'] | map('extract', hostvars, ['ansible_host']) | join(':2181,') }}:2181"
+bootstrap_servers: "{{ groups['kafka_broker_nodes'] | map('extract', hostvars, ['ansible_host']) | join(':9092,') }}:9092"
+kafkastore_zookeeper_url: "{{ groups['kafka_broker_nodes'] | map('extract', hostvars, ['ansible_host']) | join(':2181,') }}:2181"
+schema_registry_urls: ""

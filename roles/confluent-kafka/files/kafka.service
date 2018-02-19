@@ -1,0 +1,16 @@
+[Unit]
+Description=Apache Kafka
+Documentation=http://kafka.apache.org/documentation.html
+Requires=network.target
+After=network.target
+ 
+[Service]
+Type=simple
+SuccessExitStatus=1
+ExecStart=/bin/kafka-server-start /etc/kafka/server.properties
+ExecStop=/bin/kafka-server-stop
+User=root
+Group=root
+ 
+[Install]
+WantedBy=default.target

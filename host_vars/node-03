@@ -1,0 +1,4 @@
+---
+# file: host_vars/node3
+broker_id: 3
+zookeeper_id: 3

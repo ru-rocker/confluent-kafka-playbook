@@ -1,0 +1,4 @@
+- hosts: kafka_broker_nodes
+  roles:
+    - confluent-kafka
+  become: true

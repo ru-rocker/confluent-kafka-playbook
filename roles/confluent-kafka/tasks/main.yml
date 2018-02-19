@@ -1,0 +1,135 @@
+---
+- import_tasks: java.yml
+  when: java_install
+
+- import_tasks: register_vars.yml
+
+- name: Add Confluent Kafka Repository (1)
+  yum_repository:
+    name: Confluent.dist
+    description: Confluent repository (dist)
+    file: confluent
+    baseurl: https://packages.confluent.io/rpm/4.0/7
+    gpgcheck: no
+    gpgkey: https://packages.confluent.io/rpm/4.0/archive.key
+    enabled: yes
+
+- name: Add Confluent Kafka Repository (2)
+  yum_repository:
+    name: Confluent
+    description: Confluent repository
+    file: confluent
+    baseurl: https://packages.confluent.io/rpm/4.0
+    gpgcheck: no
+    gpgkey: https://packages.confluent.io/rpm/4.0/archive.key
+    enabled: yes
+  notify: yum-clean-all
+
+- name: Install confluent kafka
+  yum:
+    name: confluent-platform-oss-2.11
+    state: present
+
+- name: Configure server.properties
+  template:
+    src: server.properties.j2
+    dest: /etc/kafka/server.properties
+
+- name: Configure producer.properties
+  template: 
+    src: producer.properties.j2
+    dest: /etc/kafka/producer.properties
+
+- name: configure consumer.properties
+  template:
+    src: consumer.properties.j2
+    dest: /etc/kafka/consumer.properties
+
+- name: Configure schema-registry.properties
+  template:
+    src: schema-registry.properties.j2
+    dest: /etc/schema-registry/schema-registry.properties
+
+- name: Configure kafka-rest.properties
+  template:
+    src: kafka-rest.properties.j2
+    dest: /etc/kafka-rest/kafka-rest.properties
+
+- name: Configure zookeeper.properties
+  template:
+    src: zookeeper.properties.j2
+    dest: /etc/kafka/zookeeper.properties
+
+- name: Creates zookeeper cluster directories
+  file: 
+    path: /var/lib/zookeeper 
+    state: directory
+
+- name: Configure zookeeper myid
+  template:
+    src: myid.j2
+    dest: /var/lib/zookeeper/myid
+
+- name: Install zookeeper as service
+  copy: 
+    src: zookeeper.service
+    dest: /etc/systemd/system/
+    owner: root 
+    mode: 644
+  notify:
+    - restart zookeeper service
+
+- name: Install kafka as service
+  copy: 
+    src: kafka.service
+    dest: /etc/systemd/system/
+    owner: root 
+    mode: 644
+  notify:
+    - restart kafka service
+
+- name: Install schema-registry as service
+  copy: 
+    src: schema-registry.service
+    dest: /etc/systemd/system/
+    owner: root 
+    mode: 644
+  notify:
+    - restart schema-registry service
+
+- name: Install kafka-rest as service
+  copy: 
+    src: kafka-rest.service
+    dest: /etc/systemd/system/
+    owner: root 
+    mode: 644
+  notify:
+    - restart kafka-rest service
+
+- name: enable zookeeper service on startup
+  systemd: 
+    name: zookeeper.service
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+
+- name: enable kafka service on startup
+  systemd: 
+    name: kafka.service
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+
+- name: enable schema-registry service on startup
+  systemd: 
+    name: "schema-registry.service"
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+
+- name: enable kafka-rest service on startup
+  systemd: 
+    name: "kafka-rest.service"
+    daemon_reload: yes
+    enabled: yes
+    masked: no

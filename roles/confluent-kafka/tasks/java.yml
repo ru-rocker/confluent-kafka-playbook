@@ -1,0 +1,14 @@
+---
+
+- set_fact: java_state="present"
+
+- name: RedHat - Ensure Java is installed
+  yum: name={{ java }} state={{java_state}}
+  when: ansible_os_family == 'RedHat'
+
+- command: java -version 2>&1 | grep OpenJDK
+  register: open_jdk
+
+- name: refresh the java ca-certificates
+  command: /var/lib/dpkg/info/ca-certificates-java.postinst configure
+  when: ansible_distribution == 'Ubuntu' and open_jdk.rc == 0
